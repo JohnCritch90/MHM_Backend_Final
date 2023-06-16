@@ -3,14 +3,18 @@ from flask import Flask ,request, jsonify, Blueprint
 from api.models import db, User
 # from flask_jwt_extended import create_access_token, get_jwt_identify, jew_required 
 # from flask_jwt_extended import JWTManager  
-# from models import db, User, JournalEntries, MentalHealthResources, MeditationSessions, SupportGroups, Notifications
+from models import db, User, JournalEntries, MentalHealthResources, MeditationSessions, SupportGroups, Notifications
 # from utils import APIException
 
 api = Blueprint('api', __name__)
 
-@api.route('/nhs_condition', methods=['GET'])
-def getCondition():
-    return jsonify('YOUR API WORKS, CONGRATS'), 200
+@api.route('/nhs_resource', methods=['POST'])
+def getResource():
+    request_resource = request.get_json()
+    resources = MentalHealthResources(title=request_resource["title"], description=request_resource["description"], type=request_resource["type"], url=request_resource["url"])
+    db.session.add(resources)
+    db.session.commit()
+    return f"MentalHealthResources {request_resource['title']} and {request_resource['url']} was added to your list", 200
 
 # @api.route('/signup', methods=['POST'])
 # def signup():
